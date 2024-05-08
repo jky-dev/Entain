@@ -1,4 +1,4 @@
-import { Race, RacesResponse, categories } from '../types/types'
+import { CategoriesMap, Race, RacesResponse } from '../types/types'
 
 const elapsedTimeForInvalid = -60000
 
@@ -21,7 +21,7 @@ export const constructSortedListOfRaces = (
   for (const key in response.data.race_summaries) {
     const race: Race = response.data.race_summaries[key]
 
-    const categoryName = categories[race.category_id]
+    const categoryName = CategoriesMap[race.category_id]
     if (
       categoryName === undefined ||
       !isValidTime(race.advertised_start.seconds, time)
@@ -35,4 +35,23 @@ export const constructSortedListOfRaces = (
   return races.sort(
     (a, b) => a.advertised_start.seconds - b.advertised_start.seconds
   )
+}
+
+export const timeString = (seconds: number): string => {
+  if (seconds >= 0) {
+    const minutes = Math.floor(seconds / 60)
+    const secondsLeft = seconds % 60
+
+    if (minutes > 0) {
+      return `In ${minutes} minute${
+        minutes !== 1 ? 's' : ''
+      }, ${secondsLeft} second${secondsLeft !== 1 ? 's' : ''}`
+    }
+
+    return `In ${secondsLeft} second${secondsLeft !== 1 ? 's' : ''}`
+  }
+
+  const positiveSeconds = Math.abs(seconds)
+
+  return `${positiveSeconds} second${positiveSeconds !== 1 ? 's' : ''} ago`
 }

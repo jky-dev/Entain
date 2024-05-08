@@ -1,59 +1,68 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import './App.css'
 import { getRaces } from './api/api'
 import RaceView from './components/RaceView'
 import { constructSortedListOfRaces, isValidTime } from './helpers/helpers'
-import { Race, RacesResponse, categories } from './types/types'
+import { CategoriesMap, CategoryType, Race, RacesResponse } from './types/types'
 
+type CheckboxProps = {
+  [K in CategoryType]: boolean
+}
 function App() {
   const [displayArray, setDisplayArray] = React.useState<Race[]>([])
   const [time, setTime] = React.useState<Date>(new Date())
-  const [checkboxValues, setCheckboxValues] = React.useState({
+  const [checkboxValues, setCheckboxValues] = React.useState<CheckboxProps>({
     'Greyhound Racing': true,
     'Harness Racing': true,
     'Horse Racing': true,
   })
+  const initialised = useRef(false)
 
   useEffect(() => {
+    if (!initialised.current) {
+      initialised.current = true
+      getdata()
+    }
+
     const interval = setInterval(() => {
       setTime(new Date())
-      removeInvalidEntries()
-    }, 1000)
-
-    getdata()
+    })
 
     return () => clearInterval(interval)
   }, [])
 
+  useEffect(() => {
+    removeInvalidEntries()
+  }, [time])
+
   const getdata = async () => {
-    console.log('getting data')
     const body: RacesResponse = await getRaces()
 
     const sortedRaces = constructSortedListOfRaces(body, time)
 
-    console.log('old', displayArray, 'new', sortedRaces)
     setDisplayArray(sortedRaces)
   }
 
-  const checkboxHandler = (e) => {
-    const name = e.target.value
-    const oldValue: boolean = checkboxValues[e.target.value]
+  const checkboxHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value as CategoryType
+    const oldValue: boolean = checkboxValues[name]
     setCheckboxValues({ ...checkboxValues, [name]: !oldValue })
   }
 
   const showCategoryFilter = (race: Race): boolean => {
-    return checkboxValues[categories[race.category_id]]
+    return checkboxValues[CategoriesMap[race.category_id]]
   }
 
   const removeInvalidEntries = () => {
-    console.log('checking')
     if (displayArray.length === 0) return
-    const counter = 0
+    let counter = 0
+
     while (!isValidTime(displayArray[0].advertised_start.seconds, time)) {
-      const race = displayArray.shift()
-      console.log('removing top', race?.meeting_name, race?.race_number)
+      displayArray.shift()
+      counter++
     }
     if (counter !== 0) {
+      setDisplayArray([...displayArray])
       getdata()
     }
   }
@@ -61,40 +70,24 @@ function App() {
   return (
     <>
       <h1>Next races</h1>
-      <div>
-        <input
-          type='checkbox'
-          value='Greyhound Racing'
-          checked={checkboxValues['Greyhound Racing']}
-          onChange={checkboxHandler}
-        />
-        <label>Greyhound Racing</label>
-      </div>
-      <div>
-        <input
-          type='checkbox'
-          value='Harness Racing'
-          checked={checkboxValues['Harness Racing']}
-          onChange={checkboxHandler}
-        />
-        <label>Harness Racing</label>
-      </div>
-      <div>
-        <input
-          type='checkbox'
-          value='Horse Racing'
-          checked={checkboxValues['Horse Racing']}
-          onChange={checkboxHandler}
-        />
-        <label>Horse Racing</label>
-      </div>
+      {Object.values(CategoriesMap).map((value) => (
+        <div>
+          <input
+            type='checkbox'
+            value={value}
+            checked={checkboxValues[value]}
+            onChange={checkboxHandler}
+          />
+          <label>{value}</label>
+        </div>
+      ))}
       {displayArray
         .filter((race) => showCategoryFilter(race))
         .slice(0, 5)
         .map((e) => (
           <RaceView race={e} time={time} key={e.race_id} />
         ))}
-      <button onClick={() => getdata()}></button>
+      <button onClick={() => getdata()}>Manually Refresh</button>
     </>
   )
 }

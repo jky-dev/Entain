@@ -1,4 +1,5 @@
-import { Race, categories } from '../types/types'
+import { timeString } from '../helpers/helpers'
+import { Race } from '../types/types'
 
 interface RaceViewProps {
   race: Race
@@ -12,8 +13,7 @@ const RaceView: React.FC<RaceViewProps> = ({ race, time }) => {
 
   return (
     <div>
-      {race.meeting_name} - {race.race_number} - {displaySeconds} -
-      {categories[race.category_id]}
+      {race.meeting_name} - {race.race_number} - {timeString(displaySeconds)}
     </div>
   )
 }
