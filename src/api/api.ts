@@ -3,7 +3,7 @@ import fixture from './../fixtures/apiFixture.json'
 
 export const getRaces = async (): Promise<RacesResponse> => {
   const response = await fetch(
-    'https://api.neds.com.au/rest/v1/racing/?method=nextraces&count=10',
+    'https://api.neds.com.au/rest/v1/racing/?method=nextraces&count=50',
     {
       headers: {
         'Content-Type': 'application/json',
