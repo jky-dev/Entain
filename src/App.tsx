@@ -71,7 +71,7 @@ function App() {
     <>
       <h1>Next races</h1>
       {Object.values(CategoriesMap).map((value) => (
-        <div>
+        <div key={value}>
           <input
             type='checkbox'
             value={value}
