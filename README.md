@@ -1,30 +1,17 @@
-# React + TypeScript + Vite
+# Entain Take Home Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## How it works
 
-Currently, two official plugins are available:
+On load, page fetches the next 50 races from the API. From there, the races are checked on by their category and start time. If the start time was over 60 seconds ago or the category is not one of the three provided categories, it is excluded. The remaining races are then sorted by start time in ascending order.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Races are then filtered by selected categories, and then the first 5 races will be displayed. It is assumed that by fetching 50 races from the API, each category will have at least 5 races. If no categories are selected, there will be no races shown.
 
-## Expanding the ESLint configuration
+API is refetched each time a race is removed from the list. A race is removed from the list once it has started over 60 seconds ago. Every second, the site will check if a races need to be removed. If there are races to be removed, the site will remove them from view, and also refetch races from the API, incase all races had the same start time.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+For each race shown, the meeting name and race number is displayed, alongside a countdown timer. The countdown timer shows how much time is left until the start of a race, or how long ago the race started.
 
-- Configure the top-level `parserOptions` property like this:
+## Building Locally
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+Tested with yarn 1.22.21 and node 20.11.1
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Run `yarn dev` and navigate to http://localhost:5173/
