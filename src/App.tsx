@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-import './App.css'
 import { getRaces } from './api/api'
 import RaceView from './components/RaceView'
 import { constructSortedListOfRaces, isValidTime } from './helpers/helpers'
