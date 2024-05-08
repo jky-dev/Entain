@@ -5,6 +5,8 @@ import RaceView from './components/RaceView'
 import { constructSortedListOfRaces, isValidTime } from './helpers/helpers'
 import { CategoriesMap, CategoryType, Race, RacesResponse } from './types/types'
 
+import styles from './App.module.scss'
+
 type CheckboxProps = {
   [K in CategoryType]: boolean
 }
@@ -70,25 +72,28 @@ function App() {
   return (
     <>
       <h1>Next races</h1>
-      {Object.values(CategoriesMap).map((value) => (
-        <div key={value}>
-          <input
-            type='checkbox'
-            value={value}
-            checked={checkboxValues[value]}
-            onChange={checkboxHandler}
-          />
-          <label>{value}</label>
-        </div>
-      ))}
-      {displayArray.length === 0 && <div>Loading...</div>}
-      {displayArray
-        .filter((race) => showCategoryFilter(race))
-        .slice(0, 5)
-        .map((e) => (
-          <RaceView race={e} time={time} key={e.race_id} />
+      <div className={styles.checkboxContainer}>
+        {Object.values(CategoriesMap).map((value) => (
+          <div key={value}>
+            <input
+              type='checkbox'
+              value={value}
+              checked={checkboxValues[value]}
+              onChange={checkboxHandler}
+            />
+            <label>{value}</label>
+          </div>
         ))}
-      <button onClick={() => getdata()}>Manually Refresh</button>
+      </div>
+      {displayArray.length === 0 && <div>Loading...</div>}
+      <div className={styles.raceContainer}>
+        {displayArray
+          .filter((race) => showCategoryFilter(race))
+          .slice(0, 5)
+          .map((e) => (
+            <RaceView race={e} time={time} key={e.race_id} />
+          ))}
+      </div>
     </>
   )
 }
