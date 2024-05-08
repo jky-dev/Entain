@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "data": {
+    "race_summaries": {
+      "28d8974a-d20f-41e6-ad57-8251729118be": {
+        "race_id": "28d8974a-d20f-41e6-ad57-8251729118be",
+        "race_number": 7,
+        "meeting_name": "Swindon Bags",
+        "category_id": "9daef0d7-bf3c-4f50-921d-8e818c60fe61",
+        "advertised_start": { "seconds": 1715109960 }
+      },
+      "298daeb5-2c9e-4623-aa4a-ce7ee77793fc": {
+        "race_id": "298daeb5-2c9e-4623-aa4a-ce7ee77793fc",
+        "race_number": 5,
+        "meeting_name": "Finger Lakes",
+        "category_id": "4a2788f8-e825-4d36-9894-efd4baf1cfae",
+        "advertised_start": { "seconds": 1715109660 }
+      },
+      "35d56c7d-80fe-44b5-8a3b-ceeacf61ac9c": {
+        "race_id": "35d56c7d-80fe-44b5-8a3b-ceeacf61ac9c",
+        "race_number": 6,
+        "meeting_name": "Hereford",
+        "category_id": "4a2788f8-e825-4d36-9894-efd4baf1cfae",
+        "advertised_start": { "seconds": 1715110200 }
+      }
+    }
+  }
+}
