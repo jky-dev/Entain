@@ -7,9 +7,8 @@ interface RaceViewProps {
 }
 
 const RaceView: React.FC<RaceViewProps> = ({ race, time }) => {
-  const displaySeconds = Math.floor(
-    (race.advertised_start.seconds * 1000 - time.getTime()) / 1000
-  )
+  const displaySeconds =
+    race.advertised_start.seconds - Math.floor(time.getTime() / 1000)
 
   return (
     <div className={styles.container}>
