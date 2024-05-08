@@ -15,3 +15,7 @@ For each race shown, the meeting name and race number is displayed, alongside a 
 Tested with yarn 1.22.21 and node 20.11.1
 
 Run `yarn dev` and navigate to http://localhost:5173/
+
+## Testing Locally
+
+Run `yarn test`
