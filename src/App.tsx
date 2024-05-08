@@ -1,7 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 import { getRaces } from './api/api'
 import RaceView from './components/RaceView'
-import { constructSortedListOfRaces, isValidTime } from './helpers/helpers'
+import {
+  constructSortedListOfRaces,
+  removeInvalidEntries,
+} from './helpers/helpers'
 import { CategoriesMap, CategoryType, Race, RacesResponse } from './types/types'
 
 import styles from './App.module.scss'
@@ -33,7 +36,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    removeInvalidEntries()
+    removeInvalidEntries(displayArray, time, onRemove)
   }, [time])
 
   const getdata = async () => {
@@ -54,18 +57,9 @@ function App() {
     return checkboxValues[CategoriesMap[race.category_id]]
   }
 
-  const removeInvalidEntries = () => {
-    if (displayArray.length === 0) return
-    let counter = 0
-
-    while (!isValidTime(displayArray[0].advertised_start.seconds, time)) {
-      displayArray.shift()
-      counter++
-    }
-    if (counter !== 0) {
-      setDisplayArray([...displayArray])
-      getdata()
-    }
+  const onRemove = () => {
+    setDisplayArray([...displayArray])
+    getdata()
   }
 
   return (

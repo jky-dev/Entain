@@ -55,3 +55,20 @@ export const timeString = (seconds: number): string => {
 
   return `${positiveSeconds} second${positiveSeconds !== 1 ? 's' : ''} ago`
 }
+
+export const removeInvalidEntries = (
+  sortedArray: Race[],
+  time: Date,
+  onRemove: () => void
+) => {
+  if (sortedArray.length === 0) return
+  let counter = 0
+
+  while (!isValidTime(sortedArray[0].advertised_start.seconds, time)) {
+    sortedArray.shift()
+    counter++
+  }
+  if (counter !== 0) {
+    onRemove()
+  }
+}

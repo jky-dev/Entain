@@ -1,4 +1,10 @@
-import { constructSortedListOfRaces, isValidTime, timeString } from './helpers'
+import { Race } from '../types/types'
+import {
+  constructSortedListOfRaces,
+  isValidTime,
+  removeInvalidEntries,
+  timeString,
+} from './helpers'
 
 describe('helpers', () => {
   describe('Is Valid Time', () => {
@@ -187,6 +193,113 @@ describe('helpers', () => {
     it('should show the correct time for negative seconds', () => {
       expect(timeString(-122)).toBe('122 seconds ago')
       expect(timeString(-1)).toBe('1 second ago')
+    })
+  })
+
+  describe('Remove Invalid Entries', () => {
+    it('should remove entries', () => {
+      const currentDate = new Date()
+      const currentTimeInSeconds = Math.floor(currentDate.getTime() / 1000)
+      const races: Race[] = [
+        {
+          race_id: '1',
+          race_number: 1,
+          meeting_name: 'mock 1',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds - 61 },
+        },
+        {
+          race_id: '2',
+          race_number: 2,
+          meeting_name: 'mock 2',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds - 12 },
+        },
+        {
+          race_id: '3',
+          race_number: 3,
+          meeting_name: 'mock 3',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds + 60 },
+        },
+      ]
+      const onRemove = jest.fn()
+
+      removeInvalidEntries(races, currentDate, onRemove)
+
+      expect(onRemove).toHaveBeenCalledTimes(1)
+
+      expect(races.length).toBe(2)
+    })
+
+    it('should not remove entries', () => {
+      const currentDate = new Date()
+      const currentTimeInSeconds = Math.floor(currentDate.getTime() / 1000)
+      const races: Race[] = [
+        {
+          race_id: '1',
+          race_number: 1,
+          meeting_name: 'mock 1',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds + 1 },
+        },
+        {
+          race_id: '2',
+          race_number: 2,
+          meeting_name: 'mock 2',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds + 12 },
+        },
+        {
+          race_id: '3',
+          race_number: 3,
+          meeting_name: 'mock 3',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds + 60 },
+        },
+      ]
+      const onRemove = jest.fn()
+
+      removeInvalidEntries(races, currentDate, onRemove)
+
+      expect(onRemove).not.toHaveBeenCalled()
+
+      expect(races.length).toBe(3)
+    })
+
+    it('should remove multiple entries', () => {
+      const currentDate = new Date()
+      const currentTimeInSeconds = Math.floor(currentDate.getTime() / 1000)
+      const races: Race[] = [
+        {
+          race_id: '1',
+          race_number: 1,
+          meeting_name: 'mock 1',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds - 60 },
+        },
+        {
+          race_id: '2',
+          race_number: 2,
+          meeting_name: 'mock 2',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds - 60 },
+        },
+        {
+          race_id: '3',
+          race_number: 3,
+          meeting_name: 'mock 3',
+          category_id: '4a2788f8-e825-4d36-9894-efd4baf1cfae',
+          advertised_start: { seconds: currentTimeInSeconds + 60 },
+        },
+      ]
+      const onRemove = jest.fn()
+
+      removeInvalidEntries(races, currentDate, onRemove)
+
+      expect(onRemove).toHaveBeenCalledTimes(1)
+
+      expect(races.length).toBe(1)
     })
   })
 })
