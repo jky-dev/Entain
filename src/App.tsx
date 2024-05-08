@@ -86,14 +86,12 @@ function App() {
         ))}
       </div>
       {displayArray.length === 0 && <div>Loading...</div>}
-      <div className={styles.raceContainer}>
-        {displayArray
-          .filter((race) => showCategoryFilter(race))
-          .slice(0, 5)
-          .map((e) => (
-            <RaceView race={e} time={time} key={e.race_id} />
-          ))}
-      </div>
+      {displayArray
+        .filter((race) => showCategoryFilter(race))
+        .slice(0, 5)
+        .map((e) => (
+          <RaceView race={e} time={time} key={e.race_id} />
+        ))}
     </>
   )
 }
