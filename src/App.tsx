@@ -81,6 +81,7 @@ function App() {
           <label>{value}</label>
         </div>
       ))}
+      {displayArray.length === 0 && <div>Loading...</div>}
       {displayArray
         .filter((race) => showCategoryFilter(race))
         .slice(0, 5)
